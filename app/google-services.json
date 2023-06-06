@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "848894719791",
+    "project_id": "qr-code-scanner-40d20",
+    "storage_bucket": "qr-code-scanner-40d20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:848894719791:android:35bb458c7913e15c1e93da",
+        "android_client_info": {
+          "package_name": "com.example.qrcode"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "848894719791-3nt6fb2m3pftp03rs3blcod92mur6l04.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVcKUZEHjYqocUMMAKDs-Ay-Sdco8Mde8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "848894719791-3nt6fb2m3pftp03rs3blcod92mur6l04.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
