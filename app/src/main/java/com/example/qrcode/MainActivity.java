@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,9 +38,10 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button scanBtn, sendOTPbtn;
+    Button scanBtn, sendOTPbtn,verifyOTPBtn;
     TextView scantext;
     private String verificationId;
+    EditText edtOTP;
 
 
     // variable for FirebaseAuth class
@@ -103,7 +105,23 @@ public class MainActivity extends AppCompatActivity {
                 sendVerificationCode(phone);
             }
         });
-
+            edtOTP=findViewById(R.id.edOTP);
+        verifyOTPBtn=findViewById(R.id.verifyOTP);
+        verifyOTPBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // validating if the OTP text field is empty or not.
+                if (TextUtils.isEmpty(edtOTP.getText().toString())) {
+                    // if the OTP text field is empty display
+                    // a message to user to enter OTP
+                    Toast.makeText(MainActivity.this, "Please enter OTP", Toast.LENGTH_SHORT).show();
+                } else {
+                    // if OTP field is not empty calling
+                    // method to verify the OTP.
+                    verifyCode(edtOTP.getText().toString());
+                }
+            }
+        });
         Intent intent = getIntent();
         String temp = intent.getStringExtra("scannedTxt");
         if (intent != null) {

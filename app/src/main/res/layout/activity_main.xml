@@ -17,6 +17,21 @@
         android:textStyle="bold"
         android:padding="10dp"
         android:text="send otp" />
+    <EditText
+        android:id="@+id/edOTP"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:hint="enter otp"
+        />
+    <Button
+        android:id="@+id/verifyOTP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black_shade_1"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:text="verify otp" />
 
     <ImageView
         android:layout_width="300dp"
