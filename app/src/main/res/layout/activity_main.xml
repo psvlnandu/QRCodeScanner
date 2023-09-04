@@ -8,6 +8,15 @@
     android:orientation="vertical"
     android:gravity="center"
     tools:context=".MainActivity">
+    <Button
+        android:id="@+id/sendOTP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black_shade_1"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:text="send otp" />
 
     <ImageView
         android:layout_width="300dp"

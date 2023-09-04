@@ -16,9 +16,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -26,11 +33,17 @@ import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button scanBtn;
+    Button scanBtn, sendOTPbtn;
     TextView scantext;
+    private String verificationId;
+
+
+    // variable for FirebaseAuth class
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 /*
         EditText name=findViewById(R.id.idName);
         Button btn=findViewById(R.id.idSubmit);
@@ -81,6 +95,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        sendOTPbtn=findViewById(R.id.sendOTP);
+        sendOTPbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phone="+917680819817";
+                sendVerificationCode(phone);
+            }
+        });
+
         Intent intent = getIntent();
         String temp = intent.getStringExtra("scannedTxt");
         if (intent != null) {
@@ -107,6 +130,102 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    private void sendVerificationCode(String number) {
+        // this method is used for getting
+        // OTP on user phone number.
+        PhoneAuthOptions options =
+                PhoneAuthOptions.newBuilder(mAuth)
+                        .setPhoneNumber(number)            // Phone number to verify
+                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                        .setActivity(this)                 // Activity (for callback binding)
+                        .setCallbacks(mCallBack)           // OnVerificationStateChangedCallbacks
+                        .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks
+
+            // initializing our callbacks for on
+            // verification callback method.
+            mCallBack = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+        // below method is used when
+        // OTP is sent from Firebase
+        @Override
+        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+            super.onCodeSent(s, forceResendingToken);
+            // when we receive the OTP it
+            // contains a unique id which
+            // we are storing in our string
+            // which we have already created.
+            Log.d("Sample:", "onCodeSent: "+s);
+            verificationId = s;
+        }
+
+        // this method is called when user
+        // receive OTP from Firebase.
+        @Override
+        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+            // below line is used for getting OTP code
+            // which is sent in phone auth credentials.
+            final String code = phoneAuthCredential.getSmsCode();
+            Log.d("Sample:", "onVerificationCompleted: "+code);
+            // checking if the code
+            // is null or not.
+            if (code != null) {
+                // if the code is not null then
+                // we are setting that code to
+                // our OTP edittext field.
+
+
+                // after setting this code
+                // to OTP edittext field we
+                // are calling our verifycode method.
+                Log.d("Sample:", "on above verifyCode(): ");
+                verifyCode(code);
+            }
+        }
+
+        // this method is called when firebase doesn't
+        // sends our OTP code due to any error or issue.
+        @Override
+        public void onVerificationFailed(FirebaseException e) {
+            // displaying error message with firebase exception.
+            Log.d("Sample:", "onVerificationFailed: "+e.getMessage());
+            //Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    };
+    private void verifyCode(String code) {
+        // below line is used for getting
+        // credentials from our verification id and code.
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+
+        // after getting credential we are
+        // calling sign in method.
+        signInWithCredential(credential);
+    }
+    private void signInWithCredential(PhoneAuthCredential credential) {
+        // inside this method we are checking if
+        // the code entered is correct or not.
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // if the code is correct and the task is successful
+                            // we are sending our user to new activity.
+                            Log.d("Sample:", "onComplete:succ ");
+
+                        } else {
+                            // if the code is not correct then we are
+                            // displaying an error message to the user.
+                            Log.d("Sample:", "code is not correct then we are\n" +
+                                    "                            // displaying an error message to the user: ");
+                            Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
