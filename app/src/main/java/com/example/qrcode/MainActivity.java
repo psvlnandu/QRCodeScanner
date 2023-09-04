@@ -54,39 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-/*
-        EditText name=findViewById(R.id.idName);
-        Button btn=findViewById(R.id.idSubmit);
 
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        btn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                // Create a new user with a first and last name
-                Map<String, Object> user = new HashMap<>();
-                user.put("name", name.getText().toString());
-                db.collection(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .add(user)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error adding document", e);
-                            }
-                        });
-            }
-        });
-
-         */
         scantext = findViewById(R.id.idscanText);
         scanBtn = findViewById(R.id.idScanBtn);
 
@@ -105,9 +73,11 @@ public class MainActivity extends AppCompatActivity {
                 sendVerificationCode(phone);
             }
         });
+        
             edtOTP=findViewById(R.id.edOTP);
-        verifyOTPBtn=findViewById(R.id.verifyOTP);
-        verifyOTPBtn.setOnClickListener(new View.OnClickListener() {
+            verifyOTPBtn=findViewById(R.id.verifyOTP);
+        
+            verifyOTPBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // validating if the OTP text field is empty or not.
